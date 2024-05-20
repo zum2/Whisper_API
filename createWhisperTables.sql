@@ -3,14 +3,14 @@
 
 /*---------------以下テーブル削除----------------------*/
 
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS follow;
-DROP TABLE IF EXISTS Whisper;
 DROP TABLE IF EXISTS goodInfo;
-DROP TABLE IF EXISTS followCntView;
-DROP TABLE IF EXISTS followerCntView;
-DROP TABLE IF EXISTS whisperCntView;
-DROP TABLE IF EXISTS goodCntView;
+DROP TABLE IF EXISTS follow;
+DROP TABLE IF EXISTS whisper;
+DROP TABLE IF EXISTS user;
+DROP VIEW IF EXISTS followCntView;
+DROP VIEW IF EXISTS followerCntView;
+DROP VIEW IF EXISTS whisperCntView;
+DROP VIEW IF EXISTS goodCntView;
 
 /*---------------以下テーブル作成----------------------*/
 
