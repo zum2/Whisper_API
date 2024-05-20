@@ -60,7 +60,7 @@ GROUP BY userId;
 -- フォロワー件数ビュー
 CREATE view followerCntView AS
 SELECT followUserId, COUNT(*) AS cnt FROM follow
-GROUP BY userId;
+GROUP BY followUserId;
 
 -- ささやき件数ビュー
 CREATE view whisperCntView AS
