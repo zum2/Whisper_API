@@ -42,7 +42,7 @@ if (!isset($postData['userId'])) {
 */
 
 // クエリ(SQL)の実行
-$sql = "SELECT userName,prifile,icon FROM user WHERE userID = :userId";
+$sql = "SELECT userName,profile,icon FROM user WHERE userID = :userId";
 $stmt = $pdo->prepare($sql);
 
 // データのバインド
@@ -54,8 +54,31 @@ $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
 　　【エラーコード】004
 */
 
+if ($stmt->execute()) {
+    // 成功の処理
+    $response["result"] = "success";
+    // データの取得
+    // fetch()で1行ずつデータを取得。
+    while ($row = $stmt->fetch()) {
+        // fetch()で取得した1行分のデータが$rowに格納されているので、対象の列を指定して処理する。
+        // 大文字と小文字を区別されてたらしい。なぜ。
+        //返したときに表示する$dataをここで用意する。　それぞれの箱に$rowを詰める。
+        $data["userName"] = $row["userName"];
+        $data["profile"] = $row["profile"];
+        $data["icon"] =  $row["iconPath"];
+        // //レスポンスの枠組み(箱)の中に取得したデータを詰め込む
+        $response["list"][] = $data;
+        //var_dump($product_no);
+    }
+} else {
+    //失敗の処理
+    $response = setError($response, "004");
+}
+
 
 // ５．返却値の連想配列に成功パラメータとユーザ情報のデータを格納する
+
+
 
 // ６．SQL情報をクローズさせる。
 $stmt = null;
