@@ -1,8 +1,5 @@
 /*-- Whisperデータベース  テーブル作成スクリプト */
 
-
-USE whisper24_c;
-
 /*---------------以下テーブル削除----------------------*/
 
 DROP TABLE IF EXISTS goodInfo;
