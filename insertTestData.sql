@@ -1,11 +1,11 @@
 /*---------------------テストデータ挿入---------------------------*/
 -- ユーザ(3人分) user
 INSERT INTO user(userId, userName, password, profile, iconPath)
-VALUES ('testTanaka@mail.com','田中','tanaka0101','こんにちは！','\home\Documents\Whisper_API\tanakaicon.png');
+VALUES ('testTanaka@mail.com','田中','tanaka0101','こんにちは！','\\home\\Documents\\Whisper_API\¥tanakaicon.png');
 INSERT INTO user(userId, userName, password, profile, iconPath)
-VALUES ('testSuzuki@mail.com','鈴木','suzuki0102','おはようございます。','\home\Documents\Whisper_API\suzukiicon.png');
+VALUES ('testSuzuki@mail.com','鈴木','suzuki0102','おはようございます。','\\home\\Documents\\Whisper_API\\suzukiicon.png');
 INSERT INTO user(userId, userName, password, profile, iconPath)
-VALUES ('testSatou@mail.com','佐藤','satou0103','こんばんみ','\home\Documents\Whisper_API\satouicon.png');
+VALUES ('testSatou@mail.com','佐藤','satou0103','こんばんみ','\\home\\Documents\\Whisper_API\\satouicon.png');
 
 -- フォロー情報 follow
 
@@ -27,25 +27,25 @@ VALUES ('testSatou@mail.com','testSuzuki@mail.com');
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'おなかすいた');
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'いい天気だな','\home\Documents\Whisper_API\\sky.png');
+VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'いい天気だな','\\home\\Documents\\Whisper_API\\sky.png');
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'もう寝ようかな');
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'また明日会おう');
 
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'こちらの今日の天気は雨です','\home\Documents\Whisper_API\\rainysky.png');
+VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'こちらの今日の天気は雨です','\\home\\Documents\\Whisper_API\\rainysky.png');
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'財布を忘れてしまいました');
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'猫ってかわいいですよね');
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'駅前で見かけました','\home\Documents\Whisper_API\\cat.png');
+VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'駅前で見かけました','\\home\\Documents\\Whisper_API\\cat.png');
 
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'エナドリうまい');
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'なんだこれ','\home\Documents\Whisper_API\\sonmething.png');
+VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'なんだこれ','\\home\\Documents\\Whisper_API\\sonmething.png');
 INSERT INTO whisper(userId,postDate,content)
 VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'頭痛ぇ～～');
 INSERT INTO whisper(userId,postDate,content)
