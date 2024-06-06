@@ -36,7 +36,7 @@ CREATE TABLE follow(
 CREATE TABLE whisper(
 	whisperNo	BIGINT PRIMARY KEY AUTO_INCREMENT,
 	userId		VARCHAR(30)  NOT NULL,
-	postDate	DATE NOT NULL,
+	postDate	DATETIME NOT NULL,
 	content		VARCHAR(256) NOT NULL,
 	imagePath	VARCHAR(100),
 	FOREIGN KEY ( userId ) REFERENCES user( userId )
