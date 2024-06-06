@@ -25,31 +25,31 @@ VALUES ('testSatou@mail.com','testSuzuki@mail.com');
 
 -- ささやき(12件分) whisper
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'おなかすいた');
+VALUES ('testTanaka@mail.com','2024-3-28 11:32:43','おなかすいた');
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'いい天気だな','\\home\\Documents\\Whisper_API\\sky.png');
+VALUES ('testTanaka@mail.com','2024-3-28 14:56:12','いい天気だな','\\home\\Documents\\Whisper_API\\sky.png');
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'もう寝ようかな');
+VALUES ('testTanaka@mail.com','2024-3-28 21:25:45','もう寝ようかな');
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testTanaka@mail.com',CURRENT_TIMESTAMP,'また明日会おう');
+VALUES ('testTanaka@mail.com','2024-3-28 21:27:10','また明日会おう');
 
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'こちらの今日の天気は雨です','\\home\\Documents\\Whisper_API\\rainysky.png');
+VALUES ('testSuzuki@mail.com','2024-3-28 15:22:34','こちらの今日の天気は雨です','\\home\\Documents\\Whisper_API\\rainysky.png');
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'財布を忘れてしまいました');
+VALUES ('testSuzuki@mail.com','2024-3-28 15:47:22','財布を忘れてしまいました');
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'猫ってかわいいですよね');
+VALUES ('testSuzuki@mail.com','2024-3-28 17:35:51','猫ってかわいいですよね');
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testSuzuki@mail.com',CURRENT_TIMESTAMP,'駅前で見かけました','\\home\\Documents\\Whisper_API\\cat.png');
+VALUES ('testSuzuki@mail.com','2024-3-28 19:21:31','駅前で見かけました','\\home\\Documents\\Whisper_API\\cat.png');
 
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'エナドリうまい');
+VALUES ('testSatou@mail.com','2024-3-27 23:43:11','エナドリうまい');
 INSERT INTO whisper(userId,postDate,content,imagePath)
-VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'なんだこれ','\\home\\Documents\\Whisper_API\\sonmething.png');
+VALUES ('testSatou@mail.com','2024-3-28 01:36:53','なんだこれ','\\home\\Documents\\Whisper_API\\sonmething.png');
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'頭痛ぇ～～');
+VALUES ('testSatou@mail.com','2024-3-28 10:24:19','頭痛ぇ～～');
 INSERT INTO whisper(userId,postDate,content)
-VALUES ('testSatou@mail.com',CURRENT_TIMESTAMP,'ゲーム楽しすぎ');
+VALUES ('testSatou@mail.com','2024-3-28 22:58:59','ゲーム楽しすぎ');
 
 -- いいね情報 goodInfo
 INSERT INTO goodInfo(userId,whisperNo)
@@ -72,8 +72,6 @@ INSERT INTO goodInfo(userId,whisperNo)
 VALUES ('testSatou@mail.com',6);
 INSERT INTO goodInfo(userId,whisperNo)
 VALUES ('testSatou@mail.com',8);
-
-
 
 
 
