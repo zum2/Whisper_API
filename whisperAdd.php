@@ -23,29 +23,36 @@ if (!isset($postData['userId'])) {
 // errCodeに何も入っていない場合(エラーではない場合) - 泉
 if (is_null($response["errCode"])) {
 
-    include('mysqlConnect.php');                   // DB接続処理を呼び出し、データベースの接続を行う。
 
-    $userId = $postData["userId"];
-    $content = $postData["content"];
 
-    $date = date('Y-m-d H:i:s');
+    //エラー"001"を検出するためのtry-catch　-　泉
+    try {
+        include('mysqlConnect.php');                   // DB接続処理を呼び出し、データベースの接続を行う。
 
-    //トランザクションの開始　-　泉
-    $pdo->beginTransaction();
+        $userId = $postData["userId"];
+        $content = $postData["content"];
 
-    $sql = "INSERT INTO whisper (userId,content,postDate) VALUES(:userId,:content,:date)";
-    $stmt = $pdo->prepare($sql);
+        $date = date('Y-m-d H:i:s');
 
-    $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
-    $stmt->bindParam(':content', $content, PDO::PARAM_STR);
-    $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+        //トランザクションの開始　-　泉
+        $pdo->beginTransaction();
 
-    if ($stmt->execute()) {
+        $sql = "INSERT INTO whisper (userId,content,postDate) VALUES(:userId,:content,:date)";
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+        $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+
+        $stmt->execute();
         // 成功の処理
         //$response = array('success' => true);
         $response['result'] = "success";        //泉
         $pdo->commit();                                // データベースのコミット命令を実行する。
-    } else {
+    } catch (Exception $e) {
+        //具体的なエラー内容が知りたいとき↓　-　泉
+        //var_dump($e->getMessage());
+        //失敗時の処理　-　泉
         $pdo->rollBack();                              //  データベースのロールバック命令を実行する。
         $response = setError($response, "001");         // 【エラーコード】001
     }

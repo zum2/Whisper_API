@@ -33,29 +33,34 @@ if ($response["errCode"] == null) {
 	$userName = $postData["userName"];
 	$password = $postData["password"];
 
-	//DB接続処理を呼び出し、データベースの接続を行う。
-	include('mysqlConnect.php');
 
+	//エラー"001"を検出するためのtry-catch　-　泉
+	try {
+		//DB接続処理を呼び出し、データベースの接続を行う。
+		include('mysqlConnect.php');
 
-	//トランザクションの開始　-　泉
-	$pdo->beginTransaction();
+		//トランザクションの開始　-　泉
+		$pdo->beginTransaction();
 
-	$sql = "INSERT INTO user (userId,userName,password) VALUES(:userId,:userName,:password)";
-	$stmt = $pdo->prepare($sql);
+		$sql = "INSERT INTO user (userId,userName,password) VALUES(:userId,:userName,:password)";
+		$stmt = $pdo->prepare($sql);
 
-	// データのバインド
-	$stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
-	$stmt->bindParam(':userName', $userName, PDO::PARAM_STR);
-	$stmt->bindParam(':password', $password, PDO::PARAM_STR);
+		// データのバインド
+		$stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+		$stmt->bindParam(':userName', $userName, PDO::PARAM_STR);
+		$stmt->bindParam(':password', $password, PDO::PARAM_STR);
 
-	if ($stmt->execute()) {
+		$stmt->execute();
 		// 成功の処理
 		$response['result'] = "success";        //泉
 		//$response = array('success' => true);
 
 		// データベースのコミット命令を実行する。
 		$pdo->commit();
-	} else {
+	} catch (Exception $e) {
+		//具体的なエラー内容が知りたいとき↓　-　泉
+		//var_dump($e->getMessage());
+
 		//対象エラーメッセージをセット　-　泉
 		$response = setError($response, "001");
 		//$response['errCode'] = '001';
