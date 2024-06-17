@@ -30,6 +30,9 @@ if (is_null($response["errCode"])) {
 
     $date = date('Y-m-d H:i:s');
 
+    //トランザクションの開始　-　泉
+    $pdo->beginTransaction();
+
     $sql = "INSERT INTO whisper (userId,content,postDate) VALUES(:userId,:content,:date)";
     $stmt = $pdo->prepare($sql);
 
