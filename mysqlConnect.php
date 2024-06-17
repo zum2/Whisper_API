@@ -1,7 +1,7 @@
 
 <?php
 // DB 接続
-$host = "https://click.ecc.ac.jp/phpMyAdmin/index.php";
+$host = "localhost";
 $user = "whisper24_c";
 $pass = "eY9wpaQS";
 $database = "whisper24_c";
