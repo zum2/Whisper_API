@@ -1,10 +1,10 @@
 
 <?php
 // DB 接続
-$host = "localhost";
-$user = "wipuser";
-$pass = "whisper";
-$database = "WHISPER";
+$host = "https://click.ecc.ac.jp/phpMyAdmin/index.php";
+$user = "whisper24_c";
+$pass = "eY9wpaQS";
+$database = "whisper24_c";
 // $response = "error";
 
 $dsn = "mysql:host={$host};dbname={$database};charset=utf8mb4";
