@@ -1,4 +1,7 @@
 /*---------------------テストデータ挿入---------------------------*/
+
+USE whisper24_c;
+
 -- ユーザ(3人分) user
 INSERT INTO user(userId, userName, password, profile, iconPath)
 VALUES ('testTanaka@mail.com','田中','tanaka0101','こんにちは！','images¥\tanakaicon.png');
