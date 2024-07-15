@@ -1,34 +1,40 @@
 <?php
 
-include('errorMsgs.php');		                            // エラーメッセージ用のPHPファイルの読み込み
+include('errorMsgs.php');                                    // エラーメッセージ用のPHPファイルの読み込み
 
-$response =[
-    
+//追記　泉
+$response = [
+
     "result" => "",                                         // 実行結果を格納する(success or error)
     "errCode" => null,                                      // エラーコードがある場合格納する
     "errMsg" => null,                                       // エラーメッセージがある場合格納する
-    "whisperList" =>[],                                     // ささやき情報の配列
-    "goodList" =>[],                                        // イイね情報の配列
+    "userId" => "",                                         //ユーザID
+    "userName" => "",                                       //ユーザ名
+    "profile" => "",                                        //プロフィール
+    "userFollowFlg" => "",                                  //ユーザフォローフラグ
+    "followCount" => "",                                    //フォロー数
+    "followerCount" => "",                                  //フォロワー数
+    "whisperList" => [],                                    // ささやき情報の配列
+    "goodList" => [],                                       // イイね情報の配列
 
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {                // HTTPメソッドがPOST形式で送られてきたか確認。
-	
-    $postData = json_decode(file_get_contents('php://input'), true);
 
+    $postData = json_decode(file_get_contents('php://input'), true);
 }
 
 // Inputパラメータの必須チェックを行う。
-if(!isset($postData['userId']) || $postData['userId'] == ""){
-    $response = setError($response,"006");                  // 【エラーコード】ユーザID：006
+if (!isset($postData['userId']) || $postData['userId'] == "") {
+    $response = setError($response, "006");                  // 【エラーコード】ユーザID：006
 
 }
 
-if(!isset($postData['loginUserId']) || $postData['loginUserId'] == ""){
-    $response = setError($response,"015");                  // 【エラーコード】パスワード：015
+if (!isset($postData['loginUserId']) || $postData['loginUserId'] == "") {
+    $response = setError($response, "015");                  // 【エラーコード】パスワード：015
 }
 
-if($response["errCode"] == null){
+if ($response["errCode"] == null) {
 
     $userId = $postData["userId"];
     $loginUserId = $postData["loginUserId"];
@@ -36,30 +42,38 @@ if($response["errCode"] == null){
     include('mysqlConnect.php');                            // DB接続処理を呼び出し
 
     // ユーザ情報を取得するSQL文を実行
-    $sql = "SELECT u.userName, u.profile, fcv.cnt AS follows, fscv.cnt AS followers 
+    $sql = "SELECT u.userId, u.userName, u.profile, f.followUserId AS userFollowFlg, fcv.cnt AS followCount, fscv.cnt AS followerCount
     FROM user as u 
     LEFT JOIN followCntView AS fcv ON u.userId = fcv.userId 
     LEFT JOIN followerCntView AS fscv ON u.userid = fscv.followUserId
-    WHERE u.userId = :userId";
+    LEFT JOIN (SELECT followUserId FROM follow WHERE userId = :loginUserId AND followUserId = :userId) AS f ON f.followUserId = u.userId
+    WHERE u.userId = :userId_2";
 
-    $stmt = $pdo->prepare($sql); 
+    $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":userId", $userId, PDO::PARAM_STR);
+    $stmt->bindParam(":userId_2", $userId, PDO::PARAM_STR);
+    $stmt->bindParam(":loginUserId", $loginUserId, PDO::PARAM_STR);
     $stmt->execute();
 
-    if($stmt == null){                                          // データが存在しない場合
-        $response = setError($response,"004");                  // 【エラーコード】004
+    if ($stmt == null) {                                          // データが存在しない場合
+        $response = setError($response, "004");                  // 【エラーコード】004
     }
 
-    try{
-        while ($row = $stmt->fetch()) { 
-            $data["userName"] = $row["userName"];
-            $data["profile"] = $row["profile"];
-            $data["follows"] = $row["follows"];
-            $data["followers"] = $row["followers"];
-            $response["userList"][] = $data;
+    try {
+        while ($row = $stmt->fetch()) {
+            $response["userId"] = $row["userId"];
+            $response["userName"] = $row["userName"];
+            $response["profile"] = $row["profile"];
+            if ($row["userFollowFlg"]) {
+                $response["userFollowFlg"] = true;
+            } else {
+                $response["userFollowFlg"] = false;
+            }
+            $response["followCount"] = $row["followCount"];
+            $response["followerCount"] = $row["followCount"];
         }
         $response["result"] = "success";    // successに書き換え
-    }catch (PDOException $e) {
+    } catch (PDOException $e) {
         throw new PDOException($e->getMessage(), (int)$e->getCode());
     }
 
@@ -68,12 +82,12 @@ if($response["errCode"] == null){
     // フォロー中情報を取得するSQL文
     $sql = "SELECT * FROM follow WHERE userId = :loginUserId";
 
-    $stmt = $pdo->prepare($sql); 
+    $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":loginUserId", $loginUserId, PDO::PARAM_STR);
     $stmt->execute();
 
-    if($stmt == null){                                          // データが存在しない場合
-        $response = setError($response,"004");                  // 【エラーコード】004
+    if ($stmt == null) {                                          // データが存在しない場合
+        $response = setError($response, "004");                  // 【エラーコード】004
     }
 
     $stmt = null;                                               // SQL情報をクローズさせる
@@ -89,11 +103,11 @@ if($response["errCode"] == null){
     LEFT JOIN goodInfo AS g ON g.whisperNo = w.whisperNo AND g.userId = :loginUserId
     ORDER BY w.postDate DESC";
 
-    $stmt = $pdo->prepare($sql); 
+    $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":loginUserId", $loginUserId, PDO::PARAM_STR);
     $stmt->execute();
 
-    try{
+    try {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $data["whisperNo"] = $row["whisperNo"];
             $data["userId"] = $row["userId"];
@@ -104,11 +118,11 @@ if($response["errCode"] == null){
             $response["whisperList"][] = $data;
         }
         $response["result"] = "success";                        // successに書き換え
-    }catch (PDOException $e) {
+    } catch (PDOException $e) {
         throw new PDOException($e->getMessage(), (int)$e->getCode());
     }
 
-    $stmt =null;                                                //  SQL情報をクローズさせる
+    $stmt = null;                                                //  SQL情報をクローズさせる
 
     // イイねリストを取得するSQL文
     $sql = "SELECT w.whisperNo, u.userId, u.userName, w.postDate, w.content,
@@ -121,11 +135,11 @@ if($response["errCode"] == null){
     LEFT JOIN user AS u ON g.userid = u.userId
     ORDER BY w.postdate DESC";
 
-    $stmt = $pdo->prepare($sql); 
+    $stmt = $pdo->prepare($sql);
     $stmt->bindParam(":loginUserId", $loginUserId, PDO::PARAM_STR);
     $stmt->execute();
 
-    try{
+    try {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $data["whisperNo"] = $row["whisperNo"];
             $data["userId"] = $row["userId"];
@@ -136,7 +150,7 @@ if($response["errCode"] == null){
             $response["goodList"][] = $data;
         }
         $response["result"] = "success";                      // successに書き換え
-    }catch (PDOException $e) {
+    } catch (PDOException $e) {
         throw new PDOException($e->getMessage(), (int)$e->getCode());
     }
 
@@ -147,5 +161,3 @@ if($response["errCode"] == null){
 
 header('Content-Type: application/json');          // JSON形式でレスポンスを送信するよう指定
 echo json_encode($response, JSON_UNESCAPED_UNICODE); // $responseのデータをJSON形式に加工して出力                                                          
-
-?>
