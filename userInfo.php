@@ -62,12 +62,9 @@ if (is_null($response["errCode"])) { // エラーじゃなければ
     　　【エラーコード】004
     */
 
-    $stmt->execute();
 
     // クエリ結果の取得
-    $result = $stmt->fetchAll();
-
-    if (!empty($result)) {
+    if ($stmt->execute()) {
 
         //fetchで取得
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
