@@ -11,6 +11,7 @@ $response = [
     "userId" => "",                                         //ユーザID
     "userName" => "",                                       //ユーザ名
     "profile" => "",                                        //プロフィール
+    "iconPath" => "",                                       //アイコン
     "userFollowFlg" => "",                                  //ユーザフォローフラグ
     "followCount" => "",                                    //フォロー数
     "followerCount" => "",                                  //フォロワー数
@@ -42,7 +43,7 @@ if ($response["errCode"] == null) {
     include('mysqlConnect.php');                            // DB接続処理を呼び出し
 
     // ユーザ情報を取得するSQL文を実行
-    $sql = "SELECT u.userId, u.userName, u.profile, f.followUserId AS userFollowFlg, fcv.cnt AS followCount, fscv.cnt AS followerCount
+    $sql = "SELECT u.userId, u.userName, u.profile,u.iconPath,f.followUserId AS userFollowFlg, fcv.cnt AS followCount, fscv.cnt AS followerCount
     FROM user as u 
     LEFT JOIN followCntView AS fcv ON u.userId = fcv.userId 
     LEFT JOIN followerCntView AS fscv ON u.userid = fscv.followUserId
@@ -64,6 +65,7 @@ if ($response["errCode"] == null) {
             $response["userId"] = $row["userId"];
             $response["userName"] = $row["userName"];
             $response["profile"] = $row["profile"];
+            $response["iconPath"] = $row["iconPath"];
             if ($row["userFollowFlg"]) {
                 $response["userFollowFlg"] = true;
             } else {
@@ -93,7 +95,7 @@ if ($response["errCode"] == null) {
     $stmt = null;                                               // SQL情報をクローズさせる
 
     // ささやきリストを取得するSQL文
-    $sql = "SELECT w.whisperNo, u.userId, u.userName,w.postDate, w.content,
+    $sql = "SELECT w.whisperNo, u.userId, u.userName,u.iconPath,w.postDate, w.content,
     CASE 
         WHEN g.userId IS NOT NULL THEN TRUE 
         ELSE FALSE 
@@ -112,6 +114,7 @@ if ($response["errCode"] == null) {
             $data["whisperNo"] = $row["whisperNo"];
             $data["userId"] = $row["userId"];
             $data["userName"] = $row["userName"];
+            $data["iconPath"] = $row["iconPath"];
             $data["postDate"] = $row["postDate"];
             $data["content"] = $row["content"];
             $data["goodflg"] = $row["goodflg"];
@@ -125,7 +128,7 @@ if ($response["errCode"] == null) {
     $stmt = null;                                                //  SQL情報をクローズさせる
 
     // イイねリストを取得するSQL文
-    $sql = "SELECT w.whisperNo, u.userId, u.userName, w.postDate, w.content,
+    $sql = "SELECT w.whisperNo, u.userId, u.userName,u.iconPath,w.postDate,w.content,
     CASE 
         WHEN g.userId IS NOT NULL THEN TRUE 
         ELSE FALSE 
@@ -144,6 +147,7 @@ if ($response["errCode"] == null) {
             $data["whisperNo"] = $row["whisperNo"];
             $data["userId"] = $row["userId"];
             $data["userName"] = $row["userName"];
+            $data["iconPath"] = $row["iconPath"];
             $data["postDate"] = $row["postDate"];
             $data["content"] = $row["content"];
             $data["goodflg"] = $row["goodflg"];

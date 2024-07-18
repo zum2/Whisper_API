@@ -13,7 +13,7 @@ $response = [
     "errMsg" => null,       //エラーメッセージがある場合格納する
     "userName" => "",
     "profile" => "",
-    "icon" => "",
+    "iconPath" => "",
 
 ];
 
@@ -77,7 +77,7 @@ if (is_null($response["errCode"])) { // エラーじゃなければ
             // ５．返却値の連想配列に成功パラメータとユーザ情報のデータを格納する
             $response["userName"] = $row["userName"];
             $response["profile"] = $row["profile"];
-            $response["icon"] =  $row["iconPath"];
+            $response["iconPath"] =  $row["iconPath"];
         }
 
         // 成功の処理

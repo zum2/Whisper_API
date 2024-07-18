@@ -40,7 +40,7 @@ if (is_null($response["errCode"])) {
     $userId = $postData["userId"];
 
     // ささやきリストの内容を取得するSQL文を実行する
-    $sql = "SELECT w.whisperNo,w.userId,u.userName,w.postDate,w.content,IFNULL(goodFlg,FALSE) AS goodFlg
+    $sql = "SELECT w.whisperNo,w.userId,u.userName,u.iconPath,w.postDate,w.content,IFNULL(goodFlg,FALSE) AS goodFlg
     FROM   whisper AS w
     LEFT OUTER JOIN (SELECT userId,whisperNo,TRUE AS goodFlg 
                      FROM goodInfo
@@ -50,7 +50,7 @@ if (is_null($response["errCode"])) {
     ON (w.userId = u.userId)
     WHERE w.userId = :userId_2
     UNION ALL
-    SELECT w.whisperNo,w.userId,u.userName,w.postDate,w.content,IFNULL(goodFlg,FALSE) AS goodFlg
+    SELECT w.whisperNo,w.userId,u.userName,u.iconPath,w.postDate,w.content,IFNULL(goodFlg,FALSE) AS goodFlg
     FROM follow AS f
     INNER JOIN whisper AS w
     ON (f.followUserId = w.userId)
@@ -86,6 +86,7 @@ if (is_null($response["errCode"])) {
         $data["whisperNo"] = $row["whisperNo"];
         $data["userId"] = $row["userId"];
         $data["userName"] = $row["userName"];
+        $data["iconPath"] = $row["iconPath"];
         $data["postDate"] =  $row["postDate"];
         $data["content"] =  $row["content"];
 
