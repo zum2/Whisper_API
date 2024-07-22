@@ -128,17 +128,21 @@ if ($response["errCode"] == null) {
     $stmt = null;                                                //  SQL情報をクローズさせる
 
     // イイねリストを取得するSQL文
+    //修正　泉
     $sql = "SELECT w.whisperNo, u.userId, u.userName,u.iconPath,w.postDate,w.content,
-    CASE 
-        WHEN g.userId IS NOT NULL THEN TRUE 
-        ELSE FALSE 
-    END AS goodflg
-    FROM goodInfo AS g
-    LEFT JOIN whisper AS w ON w.whisperNo = g.whisperNo AND w.userId = :loginUserId
-    LEFT JOIN user AS u ON g.userid = u.userId
-    ORDER BY w.postdate DESC";
+            CASE 
+                WHEN myfav.userId IS NOT NULL THEN TRUE 
+                ELSE FALSE 
+            END AS goodflg
+            FROM goodInfo AS g
+            LEFT JOIN whisper AS w ON w.whisperNo = g.whisperNo
+            LEFT JOIN user AS u ON g.userid = u.userId
+            LEFT JOIN ( SELECT * from goodInfo WHERE userId = :loginUserId ) AS myfav ON g.whisperNo = myfav.whisperNo
+            WHERE g.userId = :userId
+            ORDER BY w.postdate DESC";
 
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(":userId", $userId, PDO::PARAM_STR);
     $stmt->bindParam(":loginUserId", $loginUserId, PDO::PARAM_STR);
     $stmt->execute();
 
