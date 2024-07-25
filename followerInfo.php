@@ -30,8 +30,8 @@ if($response["errCode"] == null){
     include('mysqlConnect.php');
 
 	// フォローリストを取得するSQL文
-	$sql = "SELECT u.userId, u.userName, wcv.cnt AS whispers, fcv.cnt AS follow,
-    				COALESCE(fscv.cnt, 0) AS followers
+	$sql = "SELECT u.userId, u.userName, wcv.cnt AS whisperCount, fcv.cnt AS followCount,
+    				COALESCE(fscv.cnt, 0) AS followerCount
 			FROM follow AS f
 			LEFT JOIN user AS u ON u.userId = f.followUserId
 			LEFT JOIN whisperCntView AS wcv ON wcv.userId = f.followUserId
@@ -45,12 +45,17 @@ if($response["errCode"] == null){
 
 	try{
         while ($row = $stmt->fetch()) { 
-            $data["userId"] = $row["userId"];
 			$data["userId"] = $row["userId"];
 			$data["userName"] = $row["userName"];
-			$data["whispers"] = $row["whispers"];
-			$data["follow"] = $row["follow"];
-			$data["followers"] = $row["followers"];
+			$data["whisperCount"] = $row["whisperCount"];
+			$data["followCount"] = $row["followCount"];
+			$data["followerCount"] = $row["followerCount"];
+			if($data["followCount"] == null){
+				$data["followCount"] = 0;
+			}
+			if($data["followerCount"] == null){
+				$data["followerCount"] = 0;
+			}
             $response["followList"][] = $data;
         }
         $response["result"] = "success";    // successに書き換え
@@ -61,7 +66,7 @@ if($response["errCode"] == null){
 	$stmt = null;										// SQL情報をクローズ
 	
 	// フォロワーリストを取得するSQL文
-	$sql ="SELECT u.userId, u.userName, wcv.cnt AS whispers, fcv.cnt AS follow, 
+	$sql ="SELECT u.userId, u.userName, wcv.cnt AS whisperCount, fcv.cnt AS followCount, 
 					COALESCE(fscv.cnt, 0) AS followers
 			FROM follow AS f
 			LEFT JOIN user AS u ON u.userId = f.userId
@@ -79,9 +84,16 @@ if($response["errCode"] == null){
             $data["userId"] = $row["userId"];
 			$data["userId"] = $row["userId"];
 			$data["userName"] = $row["userName"];
-			$data["whispers"] = $row["whispers"];
-			$data["follow"] = $row["follow"];
-			$data["followers"] = $row["followers"];
+			$data["whisperCount"] = $row["whisperCount"];
+			$data["followCount"] = $row["followCount"];
+			$data["followerCount"] = $row["followerCount"];
+			
+			if($data["followCount"] == null){
+				$data["followCount"] = 0;
+			}
+			if($data["followerCount"] == null){
+				$data["followerCount"] = 0;
+			}
             $response["followerList"][] = $data;
         }
         $response["result"] = "success";    // successに書き換え

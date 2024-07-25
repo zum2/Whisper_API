@@ -73,6 +73,12 @@ if ($response["errCode"] == null) {
             }
             $response["followCount"] = $row["followCount"];
             $response["followerCount"] = $row["followCount"];
+            if ($response["followCount"] == null) {
+                $response["followCount"] = 0;
+            }
+            if ($response["followerCount"] == null) {
+                $response["followerCount"] = 0;
+            }
         }
         $response["result"] = "success";    // successに書き換え
     } catch (PDOException $e) {
