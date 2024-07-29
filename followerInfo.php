@@ -2,31 +2,32 @@
 
 include('errorMsgs.php');		                            // エラーメッセージ用のPHPファイルの読み込み
 
-$response = [
-
-	"result" => "",                                         // 実行結果を格納する(success or error)
-	"errCode" => null,                                      // エラーコードがある場合格納する
-	"errMsg" => null,                                       // エラーメッセージがある場合格納する
-	"followList" => [],                                     	// フォロー情報の配列
-	"followerList" => [],                                    // フォロワー情報の配列
+$response =[
+    
+    "result" => "",                                         // 実行結果を格納する(success or error)
+    "errCode" => null,                                      // エラーコードがある場合格納する
+    "errMsg" => null,                                       // エラーメッセージがある場合格納する
+    "followList" =>[],                                     	// フォロー情報の配列
+    "followerList" =>[],                                    // フォロワー情報の配列
 
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {                // HTTPメソッドがPOST形式で送られてきたか確認。
+	
+    $postData = json_decode(file_get_contents('php://input'), true);
 
-	$postData = json_decode(file_get_contents('php://input'), true);
 }
 
 // Inputパラメータの必須チェックを行う
-if (!isset($postData["userId"]) || $postData["userId"] == "") {
-	$response = setError($response, "006");                  // 【エラーコード】ユーザID：006
+if(!isset($postData["userId"]) || $postData["userId"] == ""){
+    $response = setError($response,"006");                  // 【エラーコード】ユーザID：006
 }
 
-if ($response["errCode"] == null) {
+if($response["errCode"] == null){
 
 	$userId = $postData["userId"];
 
-	include('mysqlConnect.php');
+    include('mysqlConnect.php');
 
 	// フォローリストを取得するSQL文
 	$sql = "SELECT u.userId, u.userName, wcv.cnt AS whisperCount, fcv.cnt AS followCount,
@@ -38,34 +39,34 @@ if ($response["errCode"] == null) {
 			LEFT JOIN followerCntView AS fscv ON fscv.followUserId = f.followUserId
 			WHERE f.userId = :userId";
 
-	$stmt = $pdo->prepare($sql);
+	$stmt = $pdo->prepare($sql); 
 	$stmt->bindParam(":userId", $userId, PDO::PARAM_STR);
 	$stmt->execute();
 
-	try {
-		while ($row = $stmt->fetch()) {
+	try{
+        while ($row = $stmt->fetch()) { 
 			$data["userId"] = $row["userId"];
 			$data["userName"] = $row["userName"];
 			$data["whisperCount"] = $row["whisperCount"];
 			$data["followCount"] = $row["followCount"];
 			$data["followerCount"] = $row["followerCount"];
-			if ($data["followCount"] == null) {
+			if($data["followCount"] == null){
 				$data["followCount"] = 0;
 			}
-			if ($data["followerCount"] == null) {
+			if($data["followerCount"] == null){
 				$data["followerCount"] = 0;
 			}
-			$response["followList"][] = $data;
-		}
-		$response["result"] = "success";    // successに書き換え
-	} catch (PDOException $e) {
-		throw new PDOException($e->getMessage(), (int)$e->getCode());
-	}
+            $response["followList"][] = $data;
+        }
+        $response["result"] = "success";    // successに書き換え
+    }catch (PDOException $e) {
+        throw new PDOException($e->getMessage(), (int)$e->getCode());
+    }
 
 	$stmt = null;										// SQL情報をクローズ
-
+	
 	// フォロワーリストを取得するSQL文
-	$sql = "SELECT u.userId, u.userName, wcv.cnt AS whisperCount, fcv.cnt AS followCount, 
+	$sql ="SELECT u.userId, u.userName, wcv.cnt AS whisperCount, fcv.cnt AS followCount, 
 					COALESCE(fscv.cnt, 0) AS followerCount
 			FROM follow AS f
 			LEFT JOIN user AS u ON u.userId = f.userId
@@ -74,31 +75,31 @@ if ($response["errCode"] == null) {
 			LEFT JOIN followerCntView AS fscv ON fscv.followUserId = f.userId
 			WHERE f.followUserId = :userId";
 
-	$stmt = $pdo->prepare($sql);
+	$stmt = $pdo->prepare($sql); 
 	$stmt->bindParam(":userId", $userId, PDO::PARAM_STR);
 	$stmt->execute();
 
-	try {
-		while ($row = $stmt->fetch()) {
-			$data["userId"] = $row["userId"];
+	try{
+        while ($row = $stmt->fetch()) { 
+            $data["userId"] = $row["userId"];
 			$data["userId"] = $row["userId"];
 			$data["userName"] = $row["userName"];
 			$data["whisperCount"] = $row["whisperCount"];
 			$data["followCount"] = $row["followCount"];
 			$data["followerCount"] = $row["followerCount"];
-
-			if ($data["followCount"] == null) {
+			
+			if($data["followCount"] == null){
 				$data["followCount"] = 0;
 			}
-			if ($data["followerCount"] == null) {
+			if($data["followerCount"] == null){
 				$data["followerCount"] = 0;
 			}
-			$response["followerList"][] = $data;
-		}
-		$response["result"] = "success";    // successに書き換え
-	} catch (PDOException $e) {
-		throw new PDOException($e->getMessage(), (int)$e->getCode());
-	}
+            $response["followerList"][] = $data;
+        }
+        $response["result"] = "success";    // successに書き換え
+    }catch (PDOException $e) {
+        throw new PDOException($e->getMessage(), (int)$e->getCode());
+    }
 
 	$stmt = null;										// SQL情報をクローズ
 
@@ -106,3 +107,5 @@ if ($response["errCode"] == null) {
 }
 header('Content-Type: application/json');          		// JSON形式でレスポンスを送信するよう指定
 echo json_encode($response, JSON_UNESCAPED_UNICODE); 	// $responseのデータをJSON形式に加工して出力                                                          
+
+?>

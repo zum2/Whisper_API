@@ -37,7 +37,7 @@ if($response["errCode"] == null){
 
         if ($section == 1) {                                        // 検索区分が1(ユーザ検索)の場合
             
-            $sql = "SELECT u.userId, u.userName, fw.cnt AS followCount, fwer.cnt AS followerCount, wh.cnt AS whisperCount 
+            $sql = "SELECT u.userId, u.iconPath, u.userName, fw.cnt AS followCount, fwer.cnt AS followerCount, wh.cnt AS whisperCount 
             FROM user AS u 
             LEFT JOIN followCntView AS fw ON u.userId = fw.userId 
             LEFT JOIN followerCntView AS fwer ON u.userId = fwer.followuserId 
@@ -52,10 +52,17 @@ if($response["errCode"] == null){
             try{
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      // データのフェッチを行い、検索結果のデータがある間以下の処理を繰り返す
                     $data["userId"] = $row["userId"];
+                    $data["iconPath"] = $row["iconPath"];
                     $data["userName"] = $row["userName"];
                     $data["whisperCount"] = $row["whisperCount"];
                     $data["followCount"] = $row["followCount"];
                     $data["followerCount"] = $row["followerCount"];
+                    if( $data["followCount"] == null){
+                        $data["followCount"] = 0;
+                    }
+                    if( $data["followerCount"] == null){
+                        $data["followerCount"] = 0;
+                    }
                     $response["userList"][] = $data;                   // ユーザーリストの連想配列にデータを追加
 
                 }
@@ -68,7 +75,7 @@ if($response["errCode"] == null){
 
         }else if($section == 2){                                    // 検索区分が2(ささやき検索)の場合
            
-            $sql="SELECT w.whisperNo, u.userId, u.userName, w.postDate, w.content, gcv.cnt AS goodCount 
+            $sql="SELECT w.whisperNo, u.userId, u.iconPath,u.userName, w.postDate, w.content, gcv.cnt AS goodCount 
             FROM whisper AS w 
             LEFT JOIN goodCntView AS gcv ON w.whisperNo = gcv.whisperNo 
             LEFT JOIN user AS u ON w.userId = u.userId 
@@ -83,6 +90,7 @@ if($response["errCode"] == null){
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      //  データのフェッチを行い、検索結果のデータがある間以下の処理を繰り返す
                     $data["whisperNo"] = $row["whisperNo"];
                     $data["userId"] = $row["userId"];
+                    $data["iconPath"] = $row["iconPath"];
                     $data["userName"] = $row["userName"];   
                     $data["postDate"] = $row["postDate"];
                     $data["content"] = $row["content"];
